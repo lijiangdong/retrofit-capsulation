@@ -17,12 +17,20 @@ import okhttp3.ResponseBody;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private UseCase checkUpdate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        UseCase checkUpdate = new CheckUpdate();
+        checkUpdate = new CheckUpdate();
         checkUpdate.execute(new CheckUpdateSubscriber());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        checkUpdate.unSubscribe();
     }
 
     class CheckUpdateSubscriber extends ResponseSubscriber<ResponseBody>{
