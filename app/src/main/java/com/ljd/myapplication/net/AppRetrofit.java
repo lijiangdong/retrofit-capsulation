@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppRetrofit {
 
@@ -20,6 +21,7 @@ public class AppRetrofit {
                 .baseUrl(baseUrl)
                 .client(getOKHttpClient())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit.create(clazz);
     }

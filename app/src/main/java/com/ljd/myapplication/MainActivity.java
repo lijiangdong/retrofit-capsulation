@@ -10,10 +10,6 @@ import com.ljd.myapplication.net.ErrorMessageFactory;
 import com.ljd.myapplication.net.ResponseSubscriber;
 import com.ljd.myapplication.net.UseCase;
 
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -33,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         checkUpdate.unSubscribe();
     }
 
-    class CheckUpdateSubscriber extends ResponseSubscriber<ResponseBody>{
+    class CheckUpdateSubscriber extends ResponseSubscriber<CheckUpdateEntity>{
         @Override
         public void onFailure(Throwable e) {
             Context context = MainActivity.this;
@@ -42,12 +38,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onSuccess(ResponseBody responseBody) {
-            try {
-                Log.d(TAG,responseBody.string());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        public void onSuccess(CheckUpdateEntity checkUpdateEntity) {
+            Log.d(TAG,checkUpdateEntity.toString());
         }
     }
 }
