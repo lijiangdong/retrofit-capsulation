@@ -10,6 +10,12 @@ import com.ljd.myapplication.net.ErrorMessageFactory;
 import com.ljd.myapplication.net.ResponseSubscriber;
 import com.ljd.myapplication.net.UseCase;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -19,7 +25,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkUpdate = new CheckUpdate();
+        Map<String,String> map = new HashMap<>();
+        map.put("q","retrofit");
+        map.put("since","2016-03-29");
+        map.put("page","1");
+        map.put("per_page","3");
+
+        checkUpdate = new CheckUpdate(map);
         checkUpdate.execute(new CheckUpdateSubscriber());
     }
 
@@ -29,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         checkUpdate.unSubscribe();
     }
 
-    class CheckUpdateSubscriber extends ResponseSubscriber<CheckUpdateEntity>{
+    class CheckUpdateSubscriber extends ResponseSubscriber<ResponseBody>{
         @Override
         public void onFailure(Throwable e) {
             Context context = MainActivity.this;
@@ -38,8 +50,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onSuccess(CheckUpdateEntity checkUpdateEntity) {
-            Log.d(TAG,checkUpdateEntity.toString());
+        public void onSuccess(ResponseBody responseBody) {
+            try {
+                Log.d(TAG,responseBody.string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
