@@ -11,22 +11,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppRetrofit {
 
+    private static final String Base_URL = "https://api.github.com/";
     private volatile static Retrofit retrofit;
 
     private AppRetrofit(){
 
     }
 
-    public static <T> T getNewsRetrofit(Class<T> clazz, String baseUrl) {
+    public static <T> T getNewsRetrofit(Class<T> clazz) {
 
-        if (TextUtils.isEmpty(baseUrl)) {
-            throw new IllegalArgumentException("BaseUrl cannot be null");
-        }
         if (retrofit == null){
             synchronized (retrofit){
                 if (retrofit == null){
                     retrofit = new Retrofit.Builder()
-                            .baseUrl(baseUrl)
+                            .baseUrl(Base_URL)
                             .client(getOKHttpClient())
                             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                             .addConverterFactory(GsonConverterFactory.create())
