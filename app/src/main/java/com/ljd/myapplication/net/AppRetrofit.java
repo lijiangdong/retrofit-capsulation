@@ -21,7 +21,7 @@ public class AppRetrofit {
     public static <T> T getNewsRetrofit(Class<T> clazz) {
 
         if (retrofit == null){
-            synchronized (retrofit){
+            synchronized (AppRetrofit.class){
                 if (retrofit == null){
                     retrofit = new Retrofit.Builder()
                             .baseUrl(Base_URL)
