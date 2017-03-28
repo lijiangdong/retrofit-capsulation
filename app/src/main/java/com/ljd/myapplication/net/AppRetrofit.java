@@ -11,18 +11,30 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppRetrofit {
 
+    private volatile static Retrofit retrofit;
+
+    private AppRetrofit(){
+
+    }
+
     public static <T> T getNewsRetrofit(Class<T> clazz, String baseUrl) {
 
         if (TextUtils.isEmpty(baseUrl)) {
             throw new IllegalArgumentException("BaseUrl cannot be null");
         }
+        if (retrofit == null){
+            synchronized (retrofit){
+                if (retrofit == null){
+                    retrofit = new Retrofit.Builder()
+                            .baseUrl(baseUrl)
+                            .client(getOKHttpClient())
+                            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                }
+            }
+        }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(getOKHttpClient())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
         return retrofit.create(clazz);
     }
 
